@@ -1,0 +1,72 @@
+---
+# tasks/main.yml - common_centos role tasks
+
+- name: Update dnf cache
+  ansible.builtin.dnf:
+    update_cache: true
+  tags:
+    - common
+    - packages
+
+- name: Update all packages
+  ansible.builtin.dnf:
+    name: "*"
+    state: latest
+  when: common_centos_update
+  tags:
+    - common
+    - packages
+    - update
+
+- name: Install common packages
+  ansible.builtin.dnf:
+    name: "{{ common_centos_packages }}"
+    state: present
+  tags:
+    - common
+    - packages
+
+- name: Set timezone
+  community.general.timezone:
+    name: "{{ common_centos_timezone }}"
+  notify: Restart crond
+  tags:
+    - common
+    - timezone
+
+- name: Set hostname
+  ansible.builtin.hostname:
+    name: "{{ inventory_hostname }}"
+  when: common_centos_set_hostname
+  tags:
+    - common
+    - hostname
+
+- name: Configure SELinux
+  ansible.posix.selinux:
+    state: "{{ common_centos_selinux_state }}"
+    policy: targeted
+  when: common_centos_selinux_state != "enforcing"
+  tags:
+    - common
+    - security
+    - selinux
+
+- name: Install dnf-automatic for auto updates
+  ansible.builtin.dnf:
+    name: dnf-automatic
+    state: present
+  when: common_centos_auto_updates
+  tags:
+    - common
+    - security
+
+- name: Enable dnf-automatic timer
+  ansible.builtin.systemd:
+    name: dnf-automatic.timer
+    state: started
+    enabled: true
+  when: common_centos_auto_updates
+  tags:
+    - common
+    - security

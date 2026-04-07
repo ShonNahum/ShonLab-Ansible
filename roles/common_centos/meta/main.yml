@@ -1,0 +1,16 @@
+---
+# meta/main.yml - common_centos role metadata
+
+galaxy_info:
+  role_name: common_centos
+  author: ShonLab
+  description: Install and configure common packages for CentOS/RHEL systems
+  license: MIT
+  min_ansible_version: "2.14"
+  platforms:
+    - name: EL
+      versions:
+        - "8"
+        - "9"
+
+dependencies: []

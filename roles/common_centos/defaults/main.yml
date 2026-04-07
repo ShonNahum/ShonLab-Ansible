@@ -1,0 +1,32 @@
+---
+# defaults/main.yml - common_centos role defaults
+
+# Packages to install via dnf
+common_centos_packages:
+  - curl
+  - wget
+  - git
+  - vim-enhanced
+  - net-tools
+  - htop
+  - unzip
+  - jq
+  - ca-certificates
+  - epel-release
+  - bash-completion
+  - bind-utils
+
+# Whether to run dnf update
+common_centos_update: false
+
+# Enable automatic security updates
+common_centos_auto_updates: true
+
+# Timezone configuration
+common_centos_timezone: "{{ ntp_timezone | default('UTC') }}"
+
+# Set hostname
+common_centos_set_hostname: false
+
+# Disable SELinux (use with caution)
+common_centos_selinux_state: "enforcing"

@@ -1,0 +1,7 @@
+---
+# handlers/main.yml - common_centos role handlers
+
+- name: Restart crond
+  ansible.builtin.service:
+    name: crond
+    state: restarted

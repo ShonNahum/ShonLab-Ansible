@@ -1,0 +1,21 @@
+---
+# tasks/main.yml - k3s role tasks
+
+- name: Include preflight checks
+  ansible.builtin.include_tasks: preflight.yml
+  tags:
+    - k3s
+    - preflight
+
+- name: Include server installation
+  ansible.builtin.include_tasks: install_server.yml
+  when: k3s_node_type == "server"
+  tags:
+    - k3s
+    - install
+
+- name: Include post-install configuration
+  ansible.builtin.include_tasks: configure.yml
+  tags:
+    - k3s
+    - configure

@@ -1,0 +1,9 @@
+---
+# group_vars/all.yml - Variables applied to ALL hosts in dev environment
+
+# Common settings
+ansible_python_interpreter: /usr/bin/python3
+
+# NTP
+ntp_enabled: true
+ntp_timezone: "UTC"

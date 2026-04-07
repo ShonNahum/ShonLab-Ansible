@@ -1,0 +1,21 @@
+---
+# site.yml - Main playbook entrypoint
+# Apply roles based on host group membership
+
+- name: Apply common configuration for Ubuntu hosts
+  hosts: ubuntu
+  become: true
+  roles:
+    - common_ubuntu
+
+- name: Apply common configuration for CentOS hosts
+  hosts: centos
+  become: true
+  roles:
+    - common_centos
+
+- name: Install and configure K3s
+  hosts: centos
+  become: true
+  roles:
+    - k3s

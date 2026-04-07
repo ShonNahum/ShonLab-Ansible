@@ -1,0 +1,7 @@
+---
+# handlers/main.yml - common_ubuntu role handlers
+
+- name: Restart cron
+  ansible.builtin.service:
+    name: cron
+    state: restarted

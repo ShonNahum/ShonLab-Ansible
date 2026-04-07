@@ -1,0 +1,21 @@
+---
+# meta/main.yml - k3s role metadata
+
+galaxy_info:
+  role_name: k3s
+  author: ShonLab
+  description: Install and configure a K3s Kubernetes cluster
+  license: MIT
+  min_ansible_version: "2.14"
+  platforms:
+    - name: Ubuntu
+      versions:
+        - focal
+        - jammy
+        - noble
+    - name: EL
+      versions:
+        - "8"
+        - "9"
+
+dependencies: []

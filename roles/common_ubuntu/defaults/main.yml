@@ -1,0 +1,32 @@
+---
+# defaults/main.yml - common_ubuntu role defaults
+
+# Packages to install via apt
+common_ubuntu_packages:
+  - curl
+  - wget
+  - git
+  - vim
+  - net-tools
+  - htop
+  - unzip
+  - jq
+  - ca-certificates
+  - gnupg
+  - lsb-release
+  - software-properties-common
+
+# Whether to run apt upgrade
+common_ubuntu_upgrade: false
+
+# Upgrade type: dist, full, safe, yes
+common_ubuntu_upgrade_type: "safe"
+
+# Enable automatic security updates
+common_ubuntu_auto_updates: true
+
+# Timezone configuration
+common_ubuntu_timezone: "{{ ntp_timezone | default('UTC') }}"
+
+# Set hostname
+common_ubuntu_set_hostname: false

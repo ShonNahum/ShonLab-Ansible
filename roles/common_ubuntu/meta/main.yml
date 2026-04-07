@@ -1,0 +1,17 @@
+---
+# meta/main.yml - common_ubuntu role metadata
+
+galaxy_info:
+  role_name: common_ubuntu
+  author: ShonLab
+  description: Install and configure common packages for Ubuntu systems
+  license: MIT
+  min_ansible_version: "2.14"
+  platforms:
+    - name: Ubuntu
+      versions:
+        - focal
+        - jammy
+        - noble
+
+dependencies: []
