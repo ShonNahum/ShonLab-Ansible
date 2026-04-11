@@ -1,0 +1,21 @@
+---
+# .ansible-lint - Ansible Lint configuration
+
+# Use the production profile for strict checks
+profile: production
+
+# Paths to exclude from linting
+exclude_paths:
+  - .git/
+  - collections/
+  - .github/
+
+# Skip specific rules if needed
+skip_list:
+  - yaml[line-length]  # Allow long lines in some cases
+
+# Enable offline mode (don't fetch Galaxy metadata)
+offline: false
+
+# Treat warnings as errors in CI
+# strict: true

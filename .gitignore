@@ -4,10 +4,17 @@
 # Vault password files
 .vault_pass
 .vault_password
+*.vault
 
 # SSH keys
 *.pem
 *.key
+
+# Galaxy downloaded collections/roles
+collections/ansible_collections/
+
+# Ansible lint cache
+.cache/
 
 # IDE
 .vscode/
