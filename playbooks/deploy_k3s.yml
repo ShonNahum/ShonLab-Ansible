@@ -1,14 +1,14 @@
 ---
-# playbooks/deploy_k3s.yml - K3s Kubernetes cluster deployment
+# playbooks/deploy_k3s.yml - K3s Kubernetes server deployment
 # AWX Job Template: point to this playbook with inventory for target environment.
 #
 # Usage:
-#   ansible-playbook -i inventories/dev/hosts.yml playbooks/deploy_k3s.yml
-#   ansible-playbook -i inventories/dev/hosts.yml playbooks/deploy_k3s.yml --tags install
-#   ansible-playbook -i inventories/dev/hosts.yml playbooks/deploy_k3s.yml --check --diff
+#   ANSIBLE_CONFIG=./ansible.cfg ansible-playbook -i inventories/dev/hosts.yml playbooks/deploy_k3s.yml
+#   ANSIBLE_CONFIG=./ansible.cfg ansible-playbook -i inventories/dev/hosts.yml playbooks/deploy_k3s.yml --limit centos-01
+#   ANSIBLE_CONFIG=./ansible.cfg ansible-playbook -i inventories/dev/hosts.yml playbooks/deploy_k3s.yml --check --diff
 
-- name: Deploy K3s Kubernetes cluster
-  hosts: k3s
+- name: Deploy K3s server
+  hosts: centos
   become: true
   gather_facts: true
 

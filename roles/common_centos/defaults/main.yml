@@ -8,7 +8,6 @@ common_centos_packages:
   - git
   - vim-enhanced
   - net-tools
-  - htop
   - unzip
   - jq
   - ca-certificates
@@ -29,4 +28,4 @@ common_centos_timezone: "{{ ntp_timezone | default('UTC') }}"
 common_centos_set_hostname: false
 
 # Disable SELinux (use with caution)
-common_centos_selinux_state: "enforcing"
+common_centos_selinux_state: "disabled"

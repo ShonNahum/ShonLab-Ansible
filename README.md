@@ -68,10 +68,6 @@ all:
       hosts:
         centos-01:
           ansible_host: 192.168.1.20
-    k3s:
-      hosts:
-        centos-01:
-          k3s_node_type: server
 ```
 
 ### 3. Customize Variables
@@ -111,7 +107,7 @@ Each role has its own `README.md` with full variable documentation:
 
 - [`common_ubuntu`](roles/common_ubuntu/README.md) — Ubuntu baseline packages, timezone, hostname, auto-updates
 - [`common_centos`](roles/common_centos/README.md) — CentOS baseline packages, timezone, hostname, SELinux, auto-updates
-- [`k3s`](roles/k3s/README.md) — K3s Kubernetes cluster installation and configuration
+- [`k3s`](roles/k3s/README.md) — K3s server installation (single-node Kubernetes)
 
 ## Adding New Environments
 

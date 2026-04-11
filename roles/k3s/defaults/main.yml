@@ -7,32 +7,11 @@ k3s_version: ""
 # K3s installation channel
 k3s_channel: "stable"
 
-# Node type: "server" or "agent"
-k3s_node_type: "server"
-
-# K3s server URL (required for agent nodes)
-# k3s_server_url: "https://<server-ip>:6443"
-
-# K3s token for joining nodes (auto-generated on first server if empty)
-# k3s_token: ""
-
-# Additional arguments for k3s server
-k3s_server_extra_args: ""
-
-# Additional arguments for k3s agent
-k3s_agent_extra_args: ""
-
-# Install kubectl symlink
-k3s_kubectl_symlink: true
+# Additional k3s server arguments (e.g. "--disable traefik --tls-san 10.0.0.1")
+k3s_extra_args: ""
 
 # kubeconfig file permissions
 k3s_kubeconfig_mode: "0644"
 
-# Whether to deploy with --write-kubeconfig-mode
-k3s_write_kubeconfig_mode: "0644"
-
-# Disable components (comma-separated: traefik, servicelb, etc.)
-k3s_disable_components: []
-
-# Data directory
-k3s_data_dir: "/var/lib/rancher/k3s"
+# Install kubectl symlink
+k3s_kubectl_symlink: true
