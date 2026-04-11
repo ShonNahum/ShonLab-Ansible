@@ -1,0 +1,15 @@
+---
+# group_vars/centos.yml - Variables for CentOS hosts in dev environment
+
+# Override common_centos role defaults per environment as needed:
+# common_centos_packages:
+#   - curl
+#   - wget
+#   - git
+#   - vim-enhanced
+
+# common_centos_update: false
+# common_centos_timezone: "Asia/Jerusalem"
+# common_centos_set_hostname: false
+# common_centos_auto_updates: true
+# common_centos_selinux_state: "enforcing"

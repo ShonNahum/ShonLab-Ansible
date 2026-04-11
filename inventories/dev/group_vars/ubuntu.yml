@@ -1,0 +1,13 @@
+---
+# group_vars/ubuntu.yml - Variables for Ubuntu hosts in dev environment
+
+# Override common_ubuntu role defaults per environment as needed:
+# common_ubuntu_packages:
+#   - curl
+#   - wget
+#   - git
+
+# common_ubuntu_upgrade: false
+# common_ubuntu_timezone: "Asia/Jerusalem"
+# common_ubuntu_set_hostname: false
+# common_ubuntu_auto_updates: true

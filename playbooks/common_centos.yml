@@ -1,0 +1,19 @@
+---
+# playbooks/common_centos.yml - CentOS/RHEL baseline configuration
+# AWX Job Template: point to this playbook with inventory for target environment.
+#
+# Usage:
+#   ansible-playbook -i inventories/dev/hosts.yml playbooks/common_centos.yml
+#   ansible-playbook -i inventories/dev/hosts.yml playbooks/common_centos.yml --tags packages
+#   ansible-playbook -i inventories/dev/hosts.yml playbooks/common_centos.yml --check --diff
+
+- name: Apply CentOS/RHEL baseline configuration
+  hosts: centos
+  become: true
+  gather_facts: true
+
+  roles:
+    - role: common_centos
+      tags:
+        - common
+        - centos

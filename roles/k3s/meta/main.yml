@@ -18,4 +18,8 @@ galaxy_info:
         - "8"
         - "9"
 
-dependencies: []
+dependencies:
+  - role: common_centos
+    when: ansible_os_family == "RedHat"
+  - role: common_ubuntu
+    when: ansible_os_family == "Debian"

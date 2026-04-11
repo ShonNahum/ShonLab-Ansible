@@ -1,6 +1,10 @@
 ---
 # group_vars/k3s.yml - Variables for K3s hosts in dev environment
 
-# Override defaults per environment as needed
+# Override k3s role defaults per environment as needed:
 # k3s_version: "v1.31.4+k3s1"
+# k3s_channel: "stable"
 # k3s_server_extra_args: "--disable traefik"
+# k3s_disable_components:
+#   - traefik
+#   - servicelb

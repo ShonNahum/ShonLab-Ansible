@@ -1,0 +1,19 @@
+---
+# playbooks/common_ubuntu.yml - Ubuntu baseline configuration
+# AWX Job Template: point to this playbook with inventory for target environment.
+#
+# Usage:
+#   ansible-playbook -i inventories/dev/hosts.yml playbooks/common_ubuntu.yml
+#   ansible-playbook -i inventories/dev/hosts.yml playbooks/common_ubuntu.yml --tags packages
+#   ansible-playbook -i inventories/dev/hosts.yml playbooks/common_ubuntu.yml --check --diff
+
+- name: Apply Ubuntu baseline configuration
+  hosts: ubuntu
+  become: true
+  gather_facts: true
+
+  roles:
+    - role: common_ubuntu
+      tags:
+        - common
+        - ubuntu

@@ -1,41 +1,35 @@
 # ShonLab Ansible
 
-A modular, production-ready Ansible project for provisioning Ubuntu, CentOS/RHEL, and K3s Kubernetes clusters.
+A modular Ansible project for provisioning Ubuntu, CentOS/RHEL That i use on my HomeLab.
 
 ## Project Structure
 
 ```
-.
-├── ansible.cfg                    # Ansible configuration
-├── site.yml                       # Main playbook entrypoint
-├── requirements.yml               # Galaxy dependencies
+ShonLab-Ansible/
+├── ansible.cfg                             # Ansible configuration
+├── collections/
+│   └── requirements.yml                    # Galaxy collections (AWX auto-installs)
 ├── inventories/
-│   └── dev/
-│       ├── hosts.ini              # Inventory hosts
-│       ├── group_vars/
-│       │   ├── all.yml            # Variables for all hosts
-│       │   └── k3s.yml            # Variables for k3s group
-│       └── host_vars/             # Per-host variable overrides
-└── roles/
-    ├── common_ubuntu/             # Ubuntu base configuration
-    │   ├── defaults/main.yml
-    │   ├── tasks/main.yml
-    │   ├── handlers/main.yml
-    │   └── meta/main.yml
-    ├── common_centos/             # CentOS/RHEL base configuration
-    │   ├── defaults/main.yml
-    │   ├── tasks/main.yml
-    │   ├── handlers/main.yml
-    │   └── meta/main.yml
-    └── k3s/                       # K3s Kubernetes cluster
-        ├── defaults/main.yml
-        ├── tasks/
-        │   ├── main.yml
-        │   ├── preflight.yml
-        │   ├── install_server.yml
-        │   └── configure.yml
-        ├── handlers/main.yml
-        └── meta/main.yml
+│   ├── dev/                                # Development environment
+│   │   ├── hosts.yml                       # Inventory hosts
+│   │   ├── group_vars/
+│   │   │   ├── all.yml                     # Variables for all hosts
+│   │   │   ├── ubuntu.yml                  # Ubuntu group overrides
+│   │   │   ├── centos.yml                  # CentOS group overrides
+│   │   │   └── k3s.yml                     # K3s group overrides
+│   │   └── host_vars/                      # Per-host variable overrides
+├── playbooks/                              # AWX Job Template entry points
+│   ├── common_ubuntu.yml                   # Ubuntu baseline configuration
+│   ├── common_centos.yml                   # CentOS baseline configuration
+│   └── deploy_k3s.yml                      # K3s cluster deployment
+├── roles/
+│   ├── requirements.yml                    # External Galaxy roles
+│   ├── common_ubuntu/                      # Ubuntu base configuration role
+│   ├── common_centos/                      # CentOS/RHEL base configuration role
+│   └── k3s/                                # K3s Kubernetes cluster role
+├── .ansible-lint                           # Ansible Lint configuration
+├── .yamllint                               # YAML Lint configuration
+└── .gitignore
 ```
 
 ## Prerequisites
@@ -43,113 +37,130 @@ A modular, production-ready Ansible project for provisioning Ubuntu, CentOS/RHEL
 - Ansible >= 2.14
 - SSH access to target hosts
 - Python 3 on target hosts
+- Required collections (auto-installed by AWX):
+  - `community.general`
+  - `ansible.posix`
 
-## Quick Start
+## Quick Start (CLI)
 
-### 1. Configure Inventory
+### 1. Install Dependencies
 
-Edit `inventories/dev/hosts.ini` and uncomment/add your hosts:
+```bash
+# Install required collections
+ansible-galaxy collection install -r collections/requirements.yml
 
-```ini
-[ubuntu]
-ubuntu-01 ansible_host=192.168.1.10
-
-[centos]
-centos-01 ansible_host=192.168.1.20
+# Install external roles (if any)
+ansible-galaxy role install -r roles/requirements.yml
 ```
 
-### 2. Customize Variables
+### 2. Configure Inventory
 
-Override role defaults via group_vars or host_vars:
+Edit `inventories/dev/hosts.yml` and add your hosts:
+
+```yaml
+all:
+  children:
+    ubuntu:
+      hosts:
+        ubuntu-01:
+          ansible_host: 192.168.1.10
+    centos:
+      hosts:
+        centos-01:
+          ansible_host: 192.168.1.20
+    k3s:
+      hosts:
+        centos-01:
+          k3s_node_type: server
+```
+
+### 3. Customize Variables
+
+Override role defaults in `group_vars/` or `host_vars/`:
 
 ```yaml
 # inventories/dev/group_vars/all.yml
-ntp_timezone: "America/New_York"
+ntp_timezone: "Asia/Jerusalem"
 ```
 
-### 3. Run the Playbook
+### 4. Run Playbooks
 
 ```bash
-# Run everything
-ansible-playbook site.yml
+# Ubuntu baseline
+ansible-playbook -i inventories/dev/hosts.yml playbooks/common_ubuntu.yml
 
-# Run against a specific inventory
-ansible-playbook -i inventories/dev/hosts.ini site.yml
+# CentOS baseline
+ansible-playbook -i inventories/dev/hosts.yml playbooks/common_centos.yml
 
-# Run only specific roles using tags
-ansible-playbook site.yml --tags packages
-
-# Target specific hosts
-ansible-playbook site.yml --limit ubuntu
+# K3s deployment
+ansible-playbook -i inventories/dev/hosts.yml playbooks/deploy_k3s.yml
 
 # Dry run (check mode)
-ansible-playbook site.yml --check --diff
+ansible-playbook -i inventories/dev/hosts.yml playbooks/common_ubuntu.yml --check --diff
+
+# Run only specific tags
+ansible-playbook -i inventories/dev/hosts.yml playbooks/common_centos.yml --tags packages
+
+# Target specific hosts
+ansible-playbook -i inventories/dev/hosts.yml playbooks/deploy_k3s.yml --limit centos-01
 ```
 
 ## Roles
 
-### `common_ubuntu`
+Each role has its own `README.md` with full variable documentation:
 
-Installs and configures baseline packages on Ubuntu systems.
-
-| Variable | Default | Description |
-|---|---|---|
-| `common_ubuntu_packages` | `[curl, wget, git, vim, ...]` | List of apt packages to install |
-| `common_ubuntu_upgrade` | `false` | Whether to run apt upgrade |
-| `common_ubuntu_upgrade_type` | `safe` | Upgrade type (dist, full, safe) |
-| `common_ubuntu_auto_updates` | `true` | Enable unattended-upgrades |
-| `common_ubuntu_timezone` | `UTC` | System timezone |
-| `common_ubuntu_set_hostname` | `false` | Set hostname from inventory |
-
-### `common_centos`
-
-Installs and configures baseline packages on CentOS/RHEL systems.
-
-| Variable | Default | Description |
-|---|---|---|
-| `common_centos_packages` | `[curl, wget, git, vim-enhanced, ...]` | List of dnf packages to install |
-| `common_centos_update` | `false` | Whether to run dnf update |
-| `common_centos_auto_updates` | `true` | Enable dnf-automatic |
-| `common_centos_timezone` | `UTC` | System timezone |
-| `common_centos_set_hostname` | `false` | Set hostname from inventory |
-| `common_centos_selinux_state` | `enforcing` | SELinux state |
-
-### `k3s`
-
-Installs and configures a K3s lightweight Kubernetes cluster.
-
-| Variable | Default | Description |
-|---|---|---|
-| `k3s_version` | `""` (latest) | Specific K3s version |
-| `k3s_channel` | `stable` | Install channel |
-| `k3s_node_type` | `server` | Node type (server) |
-| `k3s_server_extra_args` | `""` | Additional server arguments |
-| `k3s_kubectl_symlink` | `true` | Create kubectl symlink |
-| `k3s_kubeconfig_mode` | `0644` | Kubeconfig file permissions |
-| `k3s_disable_components` | `[]` | Components to disable (e.g., traefik) |
-| `k3s_data_dir` | `/var/lib/rancher/k3s` | K3s data directory |
+- [`common_ubuntu`](roles/common_ubuntu/README.md) — Ubuntu baseline packages, timezone, hostname, auto-updates
+- [`common_centos`](roles/common_centos/README.md) — CentOS baseline packages, timezone, hostname, SELinux, auto-updates
+- [`k3s`](roles/k3s/README.md) — K3s Kubernetes cluster installation and configuration
 
 ## Adding New Environments
 
-Copy the `inventories/dev/` directory:
+Copy an existing environment directory:
 
 ```bash
 cp -r inventories/dev inventories/staging
 ```
 
-Then update `hosts.ini` and `group_vars/` for the new environment and run:
+Edit `inventories/staging/hosts.yml` and `group_vars/` for the new environment, then run:
 
 ```bash
-ansible-playbook -i inventories/staging/hosts.ini site.yml
+ansible-playbook -i inventories/staging/hosts.yml playbooks/common_ubuntu.yml
 ```
 
-## Extending with New Roles
+In AWX, create a new inventory pointing to `inventories/staging/hosts.yml`.
+
+## Adding New Roles
 
 ```bash
 # Create a new role skeleton
-ansible-galaxy init roles/my_new_role
+cd roles && ansible-galaxy init my_new_role && cd ..
 
-# Add it to site.yml
+# Create a playbook for the role
+cat > playbooks/my_new_role.yml << 'EOF'
+---
+- name: Apply my new role
+  hosts: target_group
+  become: true
+  gather_facts: true
+
+  roles:
+    - role: my_new_role
+EOF
+```
+
+Then create a corresponding AWX Job Template.
+
+## Linting
+
+```bash
+# YAML lint
+yamllint .
+
+# Ansible lint
+ansible-lint
+
+# Syntax check individual playbooks
+ansible-playbook --syntax-check playbooks/common_ubuntu.yml
 ```
 
 ## License

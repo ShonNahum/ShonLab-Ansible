@@ -1,0 +1,10 @@
+---
+# collections/requirements.yml - Ansible Galaxy collections
+# AWX auto-installs these during project sync.
+# CLI: ansible-galaxy collection install -r collections/requirements.yml
+
+collections:
+  - name: community.general
+    version: ">=9.0.0"
+  - name: ansible.posix
+    version: ">=1.5.0"
